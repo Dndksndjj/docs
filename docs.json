@@ -14,39 +14,48 @@
         "tab": "Docs",
         "groups": [
           {
-            "group": "Introduction",
+            "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "Authentication",
-              "Quickstart:text",
-              "Scoring",
-              "text-moderation-api"
+              "step-by-step-instructions"
             ]
           },
           {
             "group": "API Reference",
             "pages": [
-              "api-reference/introduction",
-              "api-reference/endpoint/text-moderate"
+              "authentication",
+              "classify-endpoint",
+              "errors-and-rate-limits"
             ]
-          }
-        ]
-      },
-
-      {
-        "tab": "Moderation Guide",
-        "groups": [
+          },
           {
-            "group": "Scam & Fraud",
+            "group": "Thresholds & Actions",
             "pages": [
-"model-category"
+              "how-to-select-thresholds"
+            ]
+          },
+          {
+            "group": "Policies & Categories",
+            "pages": [
+              "category-list"
+            ]
+          },
+          {
+            "group": "Integration Guides",
+            "pages": [
+              "nextjs-node-example"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "models-and-versions",
+              "changelog",
+              "data-handling-and-retention"
             ]
           }
         ]
       }
     ]
-
   },
   "logo": {
     "light": "/logo/riskor-black.svg",
