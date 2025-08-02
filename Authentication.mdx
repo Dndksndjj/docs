@@ -1,0 +1,80 @@
+---
+title: Authentication
+description: How to securely authenticate with the Riskor API using Bearer tokens, rotate keys, and avoid common authentication issues.
+---
+
+
+All Riskor API requests require authentication with a **Bearer token** (API key).  
+Without a valid key, your request will be rejected with an HTTP `401` or `403`.
+
+---
+
+## Authentication Flow
+
+<Steps>
+  <Step title="Generate an API Key">
+    Create your API key in the Riskor Dashboard.
+    - Choose **Sandbox** for testing or **Production** for live traffic.
+    - Each key is environment-specific.
+  </Step>
+
+  <Step title="Store Keys Securely">
+    - Keep API keys **out of version control** (e.g., `.env` file, secrets manager).
+    - Restrict keys to the minimum scope needed for your integration.
+    - Do not embed keys directly in client-side code.
+  </Step>
+
+  <Step title="Send Key in Request Header">
+    Include your key in the <code>Authorization</code> header:
+
+    ```http
+    Authorization: Bearer YOUR_API_KEY
+    ```
+
+    <Callout>
+    Never append your API key to the URL — it risks exposure in logs or caches.
+    </Callout>
+  </Step>
+
+  <Step title="Rotate Keys Regularly">
+    - Issue a new key from the dashboard.
+    - Update your services to use the new key.
+    - Revoke the old key once migration is confirmed.
+  </Step>
+</Steps>
+
+---
+
+## Header Format
+
+| Header          | Value                            | Required |
+|-----------------|----------------------------------|----------|
+| `Authorization` | `Bearer YOUR_API_KEY`            | Yes      |
+| `Content-Type`  | `application/json`               | Yes      |
+
+---
+
+## Common Authentication Errors
+
+| Status | Cause | Fix |
+|--------|-------|-----|
+| `401 Unauthorized` | Missing or malformed `Authorization` header | Verify `"Bearer "` prefix and no extra spaces |
+| `403 Forbidden` | Invalid, expired, or revoked API key | Check key status in dashboard; rotate if needed |
+| `429 Too Many Requests` | Exceeded rate limits | See [Rate Limits & Quotas](/rate-limits-and-quotas) |
+
+---
+
+## Security Best Practices
+
+- Use **separate keys** for development, staging, and production.
+- Keep **short lifespans** for keys in sensitive environments.
+- Monitor API key usage in the dashboard.
+- Revoke any key suspected to be compromised.
+
+---
+
+## Related Pages
+
+- **[Getting Started](/getting-started)** — Run your first request  
+- **[Rate Limits & Quotas](/rate-limits-and-quotas)** — Avoid hitting throttle limits  
+- **[Errors & Retries](/errors-and-retries)** — Handle 401/403 and other errors gracefully

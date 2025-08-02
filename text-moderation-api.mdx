@@ -1,0 +1,118 @@
+---
+title: Text Moderate API
+description: Full reference for the main Riskor text moderation endpoint — request parameters, response fields, and status codes.
+---
+
+The **Text Moderate API** is the primary endpoint for classifying scam and fraud content.  
+It analyzes the provided text for manipulative or deceptive language and returns both **probability scores** and **decision-ready labels**.
+
+---
+
+## Endpoint
+
+```http
+POST /text-moderate
+````
+
+**Base URLs**
+
+* Sandbox: `https://sandbox.api.riskor.ai`
+* Production: `https://api.riskor.ai`
+
+**Authentication**: Bearer token required — see [Authentication](/authentication).
+
+---
+
+## Request Parameters
+
+| Field            | Type             | Required | Description                                                               |
+| ---------------- | ---------------- | -------- | ------------------------------------------------------------------------- |
+| `text`           | string           | yes\*    | Single text to analyze.                                                   |
+| `texts`          | array of strings | yes\*    | Batch of texts (mutually exclusive with `text`).                          |
+| `language`       | string           | no       | Language code (`"en"`, `"zh-TW"`). If omitted, language will be inferred. |
+| `threshold`      | integer (0–3)    | no       | Minimum score required to flag content.                                   |
+| `policy_profile` | string           | no       | Optional profile key to apply a specific set of detection rules.          |
+
+\* Either `text` or `texts` is required, not both.
+
+---
+
+## Example Request & Response
+
+<Tabs>
+  <Tab title="cURL">
+
+```bash
+curl -X POST "$BASE_URL/text-moderate" \
+  -H "Authorization: Bearer $RISKOR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "I have an investment that guarantees double your money in 30 days.",
+    "language": "en"
+  }'
+```
+
+  </Tab>
+
+  <Tab title="Example Response (JSON)">
+
+```json
+{
+  "task_id": "t_sync_19f2a7",
+  "text": "I have an investment that guarantees double your money in 30 days.",
+  "violation_prob": 0.87,
+  "final_score": 3,
+  "subcategory": "Guaranteed Return Claims",
+  "tone": "Manipulative",
+  "semanticType": "Promotional Pressure"
+}
+```
+
+  </Tab>
+</Tabs>
+
+---
+
+## Response Fields
+
+| Field            | Type    | Description                                                                          |
+| ---------------- | ------- | ------------------------------------------------------------------------------------ |
+| `task_id`        | string  | Unique request or batch identifier.                                                  |
+| `text`           | string  | Original input text.                                                                 |
+| `violation_prob` | number  | Probability (0.0–1.0) of scam/fraud presence.                                        |
+| `final_score`    | integer | Decision score (0–3). See [Scoring & Thresholding (0–3)](/scoring-and-thresholding). |
+| `subcategory`    | string  | Specific detection category matched.                                                 |
+| `tone`           | string  | Detected tone type (e.g., "Manipulative", "Assertive").                              |
+| `semanticType`   | string  | Detected semantic pattern type.                                                      |
+
+For full definitions, see [Response Schema](/response-schema).
+
+---
+
+## Status Codes
+
+| Code                    | Meaning                               |
+| ----------------------- | ------------------------------------- |
+| `200 OK`                | Request processed successfully.       |
+| `400 Bad Request`       | Missing or invalid parameters.        |
+| `401 Unauthorized`      | Missing or invalid API key.           |
+| `403 Forbidden`         | Key is inactive or lacks permissions. |
+| `413 Payload Too Large` | Request exceeds maximum allowed size. |
+| `429 Too Many Requests` | Rate limit exceeded.                  |
+| `5xx`                   | Internal server error. Retry later.   |
+
+---
+
+## Error Handling
+
+* Validate inputs before sending requests.
+* If you receive `429 Too Many Requests`, follow the limits in [Rate Limits & Quotas](/rate-limits-and-quotas).
+* For `5xx` errors, implement exponential backoff retries.
+
+---
+
+## Related Pages
+
+* **[Getting Started](/getting-started)** — Quick integration steps.
+* **[Scoring & Thresholding (0–3)](/scoring-and-thresholding)** — How to interpret scores.
+* **[Response Schema](/response-schema)** — Detailed field definitions.

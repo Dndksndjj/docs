@@ -1,0 +1,465 @@
+---
+title: Detailed Class Descriptions — Scam & Fraud
+description: All Scam & Fraud detection categories used by Riskor, with descriptions, severity scores, and examples.
+---
+
+# Detailed Class Descriptions — Scam & Fraud
+
+This page lists all Scam & Fraud subcategories detected by Riskor, with their descriptions, severity levels (`final_score`), and real-world examples.
+
+<Callout>
+Use these definitions to align moderation policies and set operational thresholds. Only intolerable, high-harm patterns are scored as 3 (Block). Others are 2 (Review) or 1 (Warn).
+</Callout>
+
+## Score legend
+- 🔴 **3 (Block)** — intolerable harm or clear fraud
+- 🟠 **2 (Review)** — strong suspicion; needs manual review or friction
+- 🟡 **1 (Warn)** — mild risk; show soft warning or require context
+
+---
+
+## 1. Investment / Get-Rich Pitch
+
+### Guaranteed Return Claims — 🔴 final_score: 3 (Block)
+**Description:** Direct promises of fixed, risk-free, or guaranteed returns.
+**Example Violations**
+- Earn $5,000 per week guaranteed — no skills needed.
+- Double your money in 7 days, 100% safe.
+**Example Non-Violations**
+- Our past performance has been strong, but results may vary.
+
+### Risk-Free Opportunity — 🟠 final_score: 2 (Review)
+**Description:** Zero-risk claims without realistic disclaimers.
+**Example Violations**
+- There’s absolutely no way you can lose.
+- Zero risk, instant returns.
+**Example Non-Violations**
+- Low risk, but market fluctuations still apply.
+
+### Unrealistic Profit Timeline — 🟠 final_score: 2 (Review)
+**Description:** Extremely fast/large profits with no credible basis.
+**Example Violations**
+- Turn $100 into $10,000 in 3 days.
+- Profit starts rolling in within 24 hours.
+**Example Non-Violations**
+- You might see returns in 6–12 months.
+
+### Limited-Time Pressure — 🟠 final_score: 2 (Review)
+**Description:** Urging immediate action for unrealistic opportunities.
+**Example Violations**
+- Join in the next 10 minutes or you’ll miss it forever.
+- Only 3 spots left — act now.
+**Example Non-Violations**
+- Early bird discount until Friday.
+
+### Secret Insider Strategy — 🟠 final_score: 2 (Review)
+**Description:** Claims of insider info that “guarantees” profit.
+**Example Violations**
+- I have a secret method no one else knows.
+- Exclusive insider info that guarantees success.
+**Example Non-Violations**
+- We follow a proprietary method, but success isn’t guaranteed.
+
+### Social Proof with Fake Earnings — 🟠 final_score: 2 (Review)
+**Description:** Fabricated testimonials, screenshots, or earnings to mislead.
+**Example Violations**
+- Here’s my $50k payout screenshot — you can get this too.
+- Everyone in our group made $10k last week.
+**Example Non-Violations**
+- A client reported good results last month, but experiences vary.
+
+---
+
+## 2. Product/Service Non-Delivery
+
+### No Access After Payment — 🟠 final_score: 2 (Review)
+**Description:** Paid but access never granted.
+**Example Violations**
+- Paid for the course, never got login details.
+- Subscription activated but nothing delivered.
+**Example Non-Violations**
+- There was a 24-hour delay before my account was activated.
+
+### Repeated Excuses or Delays — 🟠 final_score: 2 (Review)
+**Description:** Multiple unfulfilled delivery promises.
+**Example Violations**
+- They keep saying “next week” for 3 months.
+- Always blaming the supplier without delivering.
+**Example Non-Violations**
+- Shipping is delayed due to customs checks.
+
+### Ghosted After Payment — 🟠 final_score: 2 (Review)
+**Description:** Seller disappears after receiving payment.
+**Example Violations**
+- Sent money, then no replies at all.
+- Completely vanished after payment.
+**Example Non-Violations**
+- Delayed reply due to public holidays.
+
+### Fake Tracking or Shipping Info — 🟠 final_score: 2 (Review)
+**Description:** False tracking numbers or fake shipment confirmations.
+**Example Violations**
+- Tracking shows “in transit” but carrier has no record.
+- Gave me a random number that doesn’t exist.
+**Example Non-Violations**
+- Tracking was slow to update due to courier issues.
+
+### Support Silent or Disappeared — 🟠 final_score: 2 (Review)
+**Description:** Support becomes unresponsive post-purchase.
+**Example Violations**
+- No one answers emails or messages anymore.
+- Support stopped replying after my payment.
+**Example Non-Violations**
+- They reply slowly during busy periods.
+
+---
+
+## 3. Payment Recovery Scam
+
+### "Recovery Agent" Asking Fees — 🔴 final_score: 3 (Block)
+**Description:** Pretending to recover funds but demanding fees first.
+**Example Violations**
+- We’ll recover your stolen funds for $300 upfront.
+- Pay a processing fee to get your money back.
+**Example Non-Violations**
+- We can attempt recovery but we charge only after success.
+
+### Impersonation of Government or Bank — 🔴 final_score: 3 (Block)
+**Description:** Posing as officials to collect payment.
+**Example Violations**
+- This is the central bank, pay to unlock your account.
+- Government recovery department requires a fee.
+**Example Non-Violations**
+- Your bank will never ask for payment to restore service.
+
+### Guaranteed Recovery Promise — 🔴 final_score: 3 (Block)
+**Description:** Absolute promises of full recovery, often for a fee.
+**Example Violations**
+- We guarantee 100% recovery if you pay today.
+- Your lost money will be back within 48 hours.
+**Example Non-Violations**
+- We have a high success rate but no guarantees.
+
+### Refund Needs More Payment — 🔴 final_score: 3 (Block)
+**Description:** Claiming a refund exists but needs an extra payment.
+**Example Violations**
+- To process your refund, send $50 for tax.
+- Refund is pending, pay the clearance fee.
+**Example Non-Violations**
+- Refund will be processed after verification.
+
+### Crypto Wallet Unlock Scam — 🔴 final_score: 3 (Block)
+**Description:** Offering wallet “unlock” for a fee; often leads to theft.
+**Example Violations**
+- We’ll unlock your wallet for $200.
+- Pay the key fee to access your coins.
+**Example Non-Violations**
+- Wallet unlock requires identity verification, no fee.
+
+---
+
+## 4. Imposter Scam (Friend/Family/Gov)
+
+### Pretending to Be a Relative in Trouble — 🔴 final_score: 3 (Block)
+**Description:** Impersonating family/friends to request urgent funds.
+**Example Violations**
+- This is your brother — I need money for bail.
+- Aunt, I’m in trouble abroad, send funds.
+**Example Non-Violations**
+- Your cousin asked for help moving furniture.
+
+### Fake Police / Government Demands — 🔴 final_score: 3 (Block)
+**Description:** Posing as law enforcement to demand payment.
+**Example Violations**
+- Pay the fine now or face arrest.
+- Government requires immediate payment for clearance.
+**Example Non-Violations**
+- Police request contact for witness statement.
+
+### Hacked Account Asking for Help — 🔴 final_score: 3 (Block)
+**Description:** Using compromised accounts to request funds.
+**Example Violations**
+- Please send me $100, I lost my wallet.
+- Urgent — send gift cards now.
+**Example Non-Violations**
+- Friend asked for a ride to the airport.
+
+### Voice Deepfake Request — 🔴 final_score: 3 (Block)
+**Description:** AI-generated voice used to impersonate trusted people.
+**Example Violations**
+- It’s me, your boss — wire $5,000 now.
+- Mom, send me crypto immediately.
+**Example Non-Violations**
+- Voice message from a friend inviting to dinner.
+
+### Urgent Help + Unusual Payment Request — 🔴 final_score: 3 (Block)
+**Description:** Emotional urgency paired with suspicious payment methods.
+**Example Violations**
+- I need bail money, send via Bitcoin.
+- Emergency! Send iTunes gift cards now.
+**Example Non-Violations**
+- Emergency call for medical help (no payment request).
+
+---
+
+## 5. Job / Employment Fraud
+
+### Pay-to-Apply Job Offers — 🟠 final_score: 2 (Review)
+**Description:** Charging application or onboarding fees.
+**Example Violations**
+- Pay $50 to secure your interview slot.
+- Deposit $200 to start tomorrow.
+**Example Non-Violations**
+- Standard background check may charge a third-party fee disclosed upfront.
+
+### Fake Remote Work Tasks — 🟠 final_score: 2 (Review)
+**Description:** “Tasks” that require purchases or never pay out.
+**Example Violations**
+- Buy gift cards first, we’ll reimburse after.
+- Complete likes/comments — payouts later (never come).
+**Example Non-Violations**
+- Contract explains per-task rates and verified payment schedule.
+
+### "We Chose You" No Interview — 🟡 final_score: 1 (Warn)
+**Description:** Instant offers without screening; mild risk indicator.
+**Example Violations**
+- You’re hired now — send your bank details.
+- No interview needed; just pay the admin fee.
+**Example Non-Violations**
+- Recruiter invites you to a real interview process.
+
+### Referral-based Income Only — 🟠 final_score: 2 (Review)
+**Description:** Earnings depend solely on recruiting others.
+**Example Violations**
+- You only earn when you add 10 new members.
+- No base pay, just referral tiers.
+**Example Non-Violations**
+- Referral bonus on top of salaried role.
+
+### Refund After Deposit Refused — 🟠 final_score: 2 (Review)
+**Description:** “Deposits” taken then withheld after role vanishes.
+**Example Violations**
+- Position canceled; deposit non-refundable.
+- Pay training fee first; no refunds.
+**Example Non-Violations**
+- Clear, lawful refund policy honored on cancellation.
+
+---
+
+## 6. Referral / MLM Scam
+
+### Invite Friends to Get Paid — 🟠 final_score: 2 (Review)
+**Description:** Core pitch is recruiting, not product value.
+**Example Violations**
+- Earn $100 per referral; product is optional.
+- Income explodes when your downline grows.
+**Example Non-Violations**
+- Optional referral program for an actual product.
+
+### Payouts Never Arrive — 🟠 final_score: 2 (Review)
+**Description:** Promised rewards withheld or endlessly “processing.”
+**Example Violations**
+- Your bonus is pending; check again next month.
+- System glitch — payouts paused for weeks.
+**Example Non-Violations**
+- Stated payment cycle with on-time disbursements.
+
+### Referral Structure Changes Post-Join — 🟠 final_score: 2 (Review)
+**Description:** Retroactive rule changes cutting earnings.
+**Example Violations**
+- New rule: only level-1 referrals count now.
+- We recalculated — your balance is zero.
+**Example Non-Violations**
+- Prospective, transparent policy updates with notice.
+
+### Rewards Locked Behind Tasks — 🟠 final_score: 2 (Review)
+**Description:** Artificial “tasks” to block withdrawals.
+**Example Violations**
+- Complete 50 missions to unlock rewards.
+- Pay a release fee to withdraw.
+**Example Non-Violations**
+- Legitimate KYC before withdrawal (no fee).
+
+### MLM "Training" Fees Required — 🟠 final_score: 2 (Review)
+**Description:** Mandatory “training” payments to participate.
+**Example Violations**
+- Pay $300 for starter kit to start earning.
+- Monthly training subscription required to keep rank.
+**Example Non-Violations**
+- Optional education materials unrelated to payouts.
+
+---
+
+## 7. Romance Scam
+
+### Sudden Intense Emotional Bond — 🟠 final_score: 2 (Review)
+**Description:** Rapid love-bombing to build trust.
+**Example Violations**
+- I love you after two days; we’re soulmates.
+- You’re the only one I can trust.
+**Example Non-Violations**
+- Normal affection over a reasonable timeline.
+
+### Asking for Help with Emergency — 🟠 final_score: 2 (Review)
+**Description:** Crisis narratives to solicit money.
+**Example Violations**
+- I need surgery; send funds now.
+- My relative is in danger — transfer money.
+**Example Non-Violations**
+- Sharing personal difficulties without asking for money.
+
+### Video Chat Avoidance — 🟡 final_score: 1 (Warn)
+**Description:** Repeated excuses to avoid verification.
+**Example Violations**
+- Camera broken for months.
+- I can’t talk live, only text.
+**Example Non-Violations**
+- Scheduling conflicts but willing to verify identity later.
+
+### Crypto or Gift Card Requests — 🔴 final_score: 3 (Block)
+**Description:** Demands payment via hard-to-recover methods.
+**Example Violations**
+- Send Bitcoin now so I can pay the hospital.
+- Buy Steam cards; I’ll pay you back.
+**Example Non-Violations**
+- Discussing crypto in general without requesting money.
+
+### Visa / Travel Money Scam — 🟠 final_score: 2 (Review)
+**Description:** Claiming funds needed to meet in person.
+**Example Violations**
+- Pay my visa fee and I’ll visit you.
+- Cover my ticket; I’ll repay later.
+**Example Non-Violations**
+- Planning a trip without asking for funds.
+
+---
+
+## 8. Crypto / Wallet Scam
+
+### Fake Airdrop / Claim Page — 🟠 final_score: 2 (Review)
+**Description:** Phishing sites promising token claims.
+**Example Violations**
+- Connect to claim your bonus tokens.
+- Limited airdrop — verify here.
+**Example Non-Violations**
+- Official project announcement linking to known domain.
+
+### Connect Wallet = Funds Drained — 🔴 final_score: 3 (Block)
+**Description:** Malicious prompts that request dangerous permissions.
+**Example Violations**
+- Approve unlimited spend to get rewards.
+- Grant access so we can deposit tokens.
+**Example Non-Violations**
+- Viewing a read-only dashboard without approvals.
+
+### Imitation of Real DApp — 🟠 final_score: 2 (Review)
+**Description:** Look-alike URLs or interfaces mimicking legit apps.
+**Example Violations**
+- Uniswap-like site with swapped letters.
+- Fake Ledger Live web app.
+**Example Non-Violations**
+- Verified official links from trusted channels.
+
+### "Verify Identity" Scam — 🟠 final_score: 2 (Review)
+**Description:** Fake KYC collecting keys or seed phrases.
+**Example Violations**
+- Enter your seed to verify identity.
+- Upload private key for compliance.
+**Example Non-Violations**
+- Real KYC with reputable provider (never asks for seed/private key).
+
+### Dusting Attack Explanation Trap — 🟡 final_score: 1 (Warn)
+**Description:** Unsolicited tokens + messages luring to malicious sites.
+**Example Violations**
+- You received tokens; click to unlock them.
+- Swap these airdropped coins here.
+**Example Non-Violations**
+- Educational content explaining dusting risks.
+
+---
+
+## 9. Chargeback Fraud
+
+### Threatening Chargeback for Refund — 🟠 final_score: 2 (Review)
+**Description:** Using chargeback threats to force a refund.
+**Example Violations**
+- Refund me or I’ll chargeback.
+- I’ll dispute with my bank if you don’t pay now.
+**Example Non-Violations**
+- Asking about refund policy politely.
+
+### Filing After Full Usage — 🟠 final_score: 2 (Review)
+**Description:** Consumed product/service fully then disputes payment.
+**Example Violations**
+- Finished the course, then filed a dispute.
+- Used software for months, then claimed unauthorized.
+**Example Non-Violations**
+- Early cancellation within policy.
+
+### False Delivery Claims — 🟠 final_score: 2 (Review)
+**Description:** Claiming “never received” against proof of delivery.
+**Example Violations**
+- Says item missing despite signed receipt.
+- Denies delivery with tracking proof.
+**Example Non-Violations**
+- Genuine lost package with no proof of delivery.
+
+### Abuse of Buyer Protection — 🟠 final_score: 2 (Review)
+**Description:** Exploiting platform protections to avoid payment.
+**Example Violations**
+- Open serial disputes to keep items free.
+- Alternate accounts to reset protections.
+**Example Non-Violations**
+- Proper use of protections for legitimate issues.
+
+### Group Coaching Refund Exploits — 🟡 final_score: 1 (Warn)
+**Description:** Joining, extracting value, then attempting coordinated refunds.
+**Example Violations**
+- Screensharing materials, then mass-refund.
+- Joining multiple cohorts to farm refunds.
+**Example Non-Violations**
+- Requesting refund within clearly stated window.
+
+---
+
+## 10. Outcome Testimonial
+
+### Paid Then Ghosted — 🟠 final_score: 2 (Review)
+**Description:** Testimonials reporting payment followed by silence.
+**Example Violations**
+- I paid and they disappeared.
+- After I sent the fee, no replies.
+**Example Non-Violations**
+- Slow response but eventually delivered.
+
+### Platform Vanished — 🟠 final_score: 2 (Review)
+**Description:** Service/platform shut down unexpectedly after payment.
+**Example Violations**
+- Site went offline right after purchase.
+- App closed; funds stuck.
+**Example Non-Violations**
+- Scheduled maintenance with notice.
+
+### Refund Request → No Response — 🟠 final_score: 2 (Review)
+**Description:** Requests ignored or auto-closed without action.
+**Example Violations**
+- Support never answered my refund ticket.
+- They marked it “resolved” with no refund.
+**Example Non-Violations**
+- Refund processed within stated SLA.
+
+### Pending Payout Never Released — 🟠 final_score: 2 (Review)
+**Description:** Promised payouts withheld indefinitely.
+**Example Violations**
+- Dashboard shows pending for months.
+- Payout “under review” forever.
+**Example Non-Violations**
+- Payout released on the next cycle.
+
+### Got Blocked After Complaint — 🟠 final_score: 2 (Review)
+**Description:** User blocked after asking for support/refund.
+**Example Violations**
+- They banned me after I asked for help.
+- Got kicked from the group after raising an issue.
+**Example Non-Violations**
+- Moderation for ToS-violating behavior, explained with evidence.

@@ -1,97 +1,79 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: Overview
+description: One-page introduction to Riskor — Scam & Fraud Detection API. Understand what it does, why choose it, and how the 0–3 scoring works.
 ---
 
-## Setting up
 
-Get your documentation site up and running in minutes.
+Riskor is a **Scam & Fraud Detection API** purpose-built to identify manipulative, deceptive, and fraudulent language in text.  
+It goes beyond keyword detection, analyzing both **tone** and **semantic signals** to accurately flag **gray-area content** that traditional models often miss.
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+---
 
-## Make it yours
+## Why Choose Riskor
+- **Purpose-built for fraud prevention** — not a generic moderation model.
+- **Tone + semantics awareness** — detects changes in intent based on emotional delivery or subtle persuasion tactics.
+- **Gray-zone detection** — flags borderline cases that don’t contain obvious scam keywords but still present risk.
+- **Actionable output** — provides a `final_score` (0–3) that can directly map to your moderation actions.
 
-Design a docs site that looks great and empowers your users.
+---
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+## Supported Languages & Platforms
+- **Languages**: English, Traditional Chinese, Simplified Chinese (more available via Beta request).
+- **Platforms**: Standard HTTPS API with cURL, Node.js, and Python support.
+- **Environments**: Both **Sandbox** and **Production** API keys are available for testing and live deployment.
 
-## Create beautiful pages
+---
 
-Everything you need to create world-class documentation.
+## How It Works
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+**Pipeline:** Input → Classification → Scoring (0–3) → Action
 
-## Need inspiration?
+User text
+│
+▼
+Riskor Classifier (Tone + Semantic Analysis)
+│
+├─ violation_prob (continuous probability)
+├─ final_score (0=Pass, 1=Warn, 2=Review, 3=Block)
+└─ Context signals: subcategory / tone / semanticType
+│
+▼
+Your Product Action (mapped to your rules)
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+yaml
+複製
+編輯
+
+---
+
+## The 0–3 Scoring Model
+
+| final_score | Meaning   | Recommended Action         |
+|------------:|-----------|----------------------------|
+| 0           | Pass      | Publish / Approve          |
+| 1           | Warn      | Soft alert, banner notice  |
+| 2           | Review    | Send for manual review     |
+| 3           | Block     | Block or require verification |
+
+> For mapping strategies, see **[Scoring & Thresholding (0–3)](/scoring-and-thresholding)**.
+
+---
+
+## Example Response (Short Form)
+```json
+{
+  "task_id": "t_19f2a7",
+  "text": "I have an investment opportunity that guarantees you double your money in 30 days.",
+  "violation_prob": 0.87,
+  "final_score": 3,
+  "subcategory": "Guaranteed Return Claims",
+  "tone": "Manipulative",
+  "semanticType": "Promotional Pressure"
+}
+```
+Next Steps
+Getting Started — Send your first API request in under 5 minutes.
+
+Text Moderate API — Full endpoint specification.
+
+Models & Categories — Complete taxonomy of supported detections.

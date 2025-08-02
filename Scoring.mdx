@@ -1,0 +1,101 @@
+---
+title: Scoring & Thresholding (0–3)
+description: How to interpret Riskor's 0–3 scoring model, choose thresholds, and map scores to product actions.
+---
+
+Riskor returns two key values in its moderation response:
+
+- **`violation_prob`** — Continuous probability (0.0–1.0) of scam/fraud presence.  
+- **`final_score`** — Discrete integer (0–3) mapped for operational decisions.
+
+---
+
+## Score Meanings
+
+| final_score | Meaning   | Recommended Action         |
+|------------:|-----------|----------------------------|
+| 0           | Pass      | Publish / Approve          |
+| 1           | Warn      | Show soft alert or banner  |
+| 2           | Review    | Send for manual review     |
+| 3           | Block     | Block or require verification |
+
+<Callout>
+Riskor's **final_score** is already tuned for operational mapping. In most cases, you should use it directly rather than recalculating from `violation_prob`.
+</Callout>
+
+---
+
+## `violation_prob` vs `final_score`
+
+| Field            | Type    | Range  | Purpose |
+|------------------|---------|--------|---------|
+| `violation_prob` | float   | 0.0–1.0 | Continuous probability output from the model. Useful for analytics or advanced custom tuning. |
+| `final_score`    | integer | 0–3    | Riskor-mapped discrete score, already applying tone/semantic weighting for decision-making. |
+
+Example:
+- A sentence with **`violation_prob` = 0.76** might map to **`final_score` = 2** if tone is suspicious but not strongly manipulative.
+- Another with **`violation_prob` = 0.78** could map to **`final_score` = 3** if tone is assertive and matches high-risk semantic patterns.
+
+---
+
+## Decision Mapping Diagram
+
+```text
+violation_prob      final_score    Recommended Action
+-----------------------------------------------------
+< 0.30              0              Pass
+0.30–0.49           1              Warn
+0.50–0.69           2              Review
+≥ 0.70              3              Block
+```
+
+<Callout>
+These ranges are an example. Your production thresholds should be tuned based on false-positive and false-negative tolerance for your use case.
+</Callout>
+
+---
+
+## False Positives vs False Negatives
+
+**False Positive (FP)**: Safe content flagged as violating — harms user trust and increases review workload.
+
+**False Negative (FN)**: Harmful content not flagged — increases platform risk.
+
+**Tuning trade-offs:**
+- Lower threshold → Fewer FNs, more FPs.
+- Higher threshold → Fewer FPs, more FNs.
+
+**Recommendations:**
+- Start with Riskor's default mapping.
+- Review flagged content weekly.
+- Adjust thresholds per channel (chat, posts, support tickets).
+
+---
+
+## Example Pseudocode
+
+```javascript
+function mapScoreToAction(final_score) {
+  switch (final_score) {
+    case 0: return "approve";
+    case 1: return "warn";
+    case 2: return "send_to_review";
+    case 3: return "block";
+  }
+}
+```
+
+---
+
+## Downloadable Strategy Template
+
+You can customize thresholds and actions with a JSON mapping:
+
+```json
+{
+  "0": "approve",
+  "1": "warn",
+  "2": "send_to_review",
+  "3": "block"
+}
+```

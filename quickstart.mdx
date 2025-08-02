@@ -1,80 +1,157 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Getting Started
+description: Get your first Riskor request running in under 5 minutes — API key, auth, environments, and minimal code examples.
 ---
 
-## Get started in three steps
+This guide helps you send your **first request** to Riskor in minutes.  
+It focuses on the essentials only: **API key**, **Bearer auth**, **Sandbox vs Production**, and minimal **cURL / Node.js / Python** examples.
 
-Get your documentation site running locally and make your first customization.
+<Callout>
+Looking for scoring semantics, thresholds, or detailed response fields? See <a href="/scoring-and-thresholding">Scoring & Thresholding (0–3)</a> and <a href="/response-schema">Response Schema</a>.
+</Callout>
 
-### Step 1: Set up your local environment
+---
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+## Prerequisites
 
-### Step 2: Deploy your changes
+- A Riskor account and access to the dashboard.
+- Network access to the Riskor HTTPS endpoint.
+- One of: cURL, Node.js (fetch), or Python (requests).
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+---
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+## Quick Path
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+<Steps>
+  <Step title="Create an API Key">
+    1. Open the Riskor dashboard and generate a key for **Sandbox** first.  
+    2. Copy your key and keep it secure — you will use it as a **Bearer token**.
 
-### Step 3: Go live
+    <Callout>
+    For security guidance (key rotation, least privilege, 401/403), see <a href="/authentication">Authentication</a>.
+    </Callout>
+  </Step>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+  <Step title="Choose Environment: Sandbox vs Production">
+    - **Sandbox**: Safe for testing. Same request shape, non-production quotas/latency.  
+    - **Production**: Live traffic with higher quotas and SLAs (subject to your plan).
+    <br />
+    Switch environments by changing the **base URL** and using the corresponding **API key**.
+  </Step>
 
-## Next steps
+  <Step title="Send Your First Request">
+    Use one of the minimal examples below. Replace:
+    - <code>RISKOR_API_KEY</code> — with your key
+    - <code>BASE_URL</code> — with your environment URL (Sandbox or Production)
+    - <code>text</code> — with the content you want to analyze
 
-Now that you have your docs running, explore these key features:
+    <Tabs>
+      <Tab title="cURL">
+        ```bash
+        export RISKOR_API_KEY="sk_sandbox_xxx"
+        export BASE_URL="https://sandbox.api.riskor.ai"
 
-<CardGroup cols={2}>
+        curl -X POST "$BASE_URL/text-moderate" \
+          -H "Authorization: Bearer $RISKOR_API_KEY" \
+          -H "Content-Type: application/json" \
+          -d '{
+            "text": "I can double your money in 30 days, guaranteed.",
+            "language": "en"
+          }'
+        ```
+      </Tab>
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+      <Tab title="Node.js">
+        ```javascript
+        const BASE_URL = "https://sandbox.api.riskor.ai";
+        const API_KEY = process.env.RISKOR_API_KEY; // set in your env
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+        async function run() {
+          const res = await fetch(`${BASE_URL}/text-moderate`, {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${API_KEY}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              text: "I can double your money in 30 days, guaranteed.",
+              language: "en"
+            })
+          });
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+          if (!res.ok) {
+            console.error("HTTP", res.status, await res.text());
+            return;
+          }
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+          const data = await res.json();
+          console.log(data);
+          // data.final_score is an integer 0–3
+          // Map it to your product action on your side.
+        }
 
-</CardGroup>
+        run().catch(console.error);
+        ```
+      </Tab>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+      <Tab title="Python">
+        ```python
+        import os, requests, json
+
+        BASE_URL = "https://sandbox.api.riskor.ai"
+        API_KEY = os.getenv("RISKOR_API_KEY")
+
+        payload = {
+            "text": "I can double your money in 30 days, guaranteed.",
+            "language": "en"
+        }
+
+        r = requests.post(
+            f"{BASE_URL}/text-moderate",
+            headers={
+                "Authorization": f"Bearer {API_KEY}",
+                "Content-Type": "application/json"
+            },
+            data=json.dumps(payload)
+        )
+
+        if r.status_code != 200:
+            print("HTTP", r.status_code, r.text)
+        else:
+            data = r.json()
+            print(data)
+            # data["final_score"] in {0,1,2,3}
+        ```
+      </Tab>
+    </Tabs>
+  </Step>
+</Steps>
+
+---
+
+## Minimal Request Shape
+
+Keep your first call simple:
+
+| Field     | Type   | Required | Notes                                   |
+|-----------|--------|----------|-----------------------------------------|
+| `text`    | string | yes      | The text to analyze.                    |
+| `language`| string | no       | Language hint (e.g., `"en"`, `"zh-TW"`). If omitted, server may infer. |
+
+For full request/response structure, see **<a href="/text-moderate">Text Moderate API</a>** and **<a href="/response-schema">Response Schema</a>**.
+
+---
+
+## Bearer Authentication (Header)
+
+Send your API key via the `Authorization` header:
+
+```http
+Authorization: Bearer YOUR_API_KEY
+If you receive 401 or 403, review <a href="/authentication">Authentication</a>.
+
+What To Do With the Score
+Your response includes a discrete final_score in 0–3.
+Map it to product actions on your side (e.g., Pass / Warn / Review / Block).
+For decision mapping patterns, see <a href="/scoring-and-thresholding">Scoring & Thresholding (0–3)</a>.
+

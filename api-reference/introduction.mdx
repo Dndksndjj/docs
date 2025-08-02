@@ -1,33 +1,137 @@
 ---
-title: 'Introductio'
-description: 'Example section for showcasing API endpoints'
+title: API Reference
+description: Introduction to the Riskor Scam & Fraud Detection API
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+The Riskor API lets you analyze text for **scam, fraud, and manipulative language** with low latency and high accuracy.
 
-## Welcome
-
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
-
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+<Tip>
+  **Base URL:** `https://api.riskor.com`  
+  All endpoints require HTTPS.
+</Tip>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+Include your API key in the `Authorization` header:
+
+```http
+Authorization: Bearer YOUR_API_KEY
+```
+
+<Warning>
+Keep your API key secret. Store it in backend environment variables and never commit it to source control.
+</Warning>
+
+## Endpoints
+
+<CardGroup cols={2}>
+  <Card title="POST /text-moderate">
+    Analyze a text string. Returns probability, final score, subCategory, tone, and semanticType.
+  </Card>
+  <Card title="(Coming Soon) POST /batch-text-moderate">
+    Submit multiple texts in one request for batch processing.
+  </Card>
+</CardGroup>
+
+## Request format — POST /text-moderate
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://api.riskor.com/text-moderate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Invest $500 today, guaranteed to double in a week!"}'
+```
+
+```javascript JavaScript (fetch)
+const res = await fetch('https://api.riskor.com/text-moderate', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    text: 'Invest $500 today, guaranteed to double in a week!'
+  })
+});
+
+const data = await res.json();
+console.log(data);
+```
+
+```python Python (requests)
+import requests
+
+url = "https://api.riskor.com/text-moderate"
+headers = {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+payload = {"text": "Invest $500 today, guaranteed to double in a week!"}
+
+response = requests.post(url, headers=headers, json=payload)
+print(response.json())
+```
+
+</CodeGroup>
+
+## Example response
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "violation_prob": 0.998,
+  "final_score": 3,
+  "subCategory": "Guaranteed Return Claims",
+  "tone": "Assertive",
+  "semanticType": "Manipulative Persuasion"
+}
 ```
+
+## Response fields
+
+<CardGroup cols={2}>
+  <Card title="violation_prob">
+    Float (0–1). Higher means more likely a violation.
+  </Card>
+  <Card title="final_score">
+    Integer (0–4): **0** safe, **1** warn, **2** review, **3** high risk, **4** block.
+  </Card>
+  <Card title="subCategory">
+    Fine-grained class (e.g., Guaranteed Return Claims) for routing and explainability.
+  </Card>
+  <Card title="tone & semanticType">
+    Contextual signals for policy logic (e.g., escalate if manipulative tone + investment promise).
+  </Card>
+</CardGroup>
+
+## Errors
+
+| Status | Meaning |
+|--------|---------|
+| 200    | Success |
+| 400    | Bad request (missing/malformed fields) |
+| 401    | Unauthorized (invalid/missing API key) |
+| 429    | Rate limit exceeded |
+| 500    | Internal server error |
+
+<Tip>
+If you see `429`, use exponential backoff or queue requests based on your plan's limits.
+</Tip>
+
+## Integration checklist
+
+<Steps>
+  <Step title="Secure your key">
+    Load the API key from backend environment variables. Do not expose it client-side.
+  </Step>
+  <Step title="Handle timeouts & retries">
+    Set sane timeouts and implement retry/backoff for transient failures (e.g., 429, 5xx).
+  </Step>
+  <Step title="Map scores to actions">
+    Use `final_score` to drive moderation flows (warn, review, block).
+  </Step>
+  <Step title="Log and audit">
+    Store `subCategory`, `tone`, and `semanticType` for explainability and reviewer tooling.
+  </Step>
+</Steps>

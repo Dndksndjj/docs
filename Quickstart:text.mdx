@@ -1,0 +1,152 @@
+---
+title: Quickstart Text
+description: The fastest path from zero to a working Riskor text moderation integration
+---
+
+This guide takes you from **no integration** to a **working Riskor text moderation pipeline** in the shortest path possible.
+
+You will learn:
+- The request parameters required for text moderation
+- How to run **synchronous** requests for real-time results
+- How to run **asynchronous** jobs for large batches
+
+<Note>
+This page assumes you already have an API key and know how to authenticate. If not, start with Getting Started and Authentication.
+</Note>
+
+## Synchronous (Real-Time) Request
+
+Best for **chat messages, live support, and small payloads** where you need instant feedback.
+
+### Request
+
+```bash
+curl -X POST "$BASE_URL/text-moderate" \
+  -H "Authorization: Bearer $RISKOR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "I can triple your investment in 10 days.",
+    "language": "en",
+    "threshold": 2
+  }'
+```
+
+### Response
+
+```json
+{
+  "task_id": "t_sync_9f3a21",
+  "text": "I can triple your investment in 10 days.",
+  "violation_prob": 0.91,
+  "final_score": 3,
+  "subcategory": "Unrealistic Profit Timeline",
+  "tone": "Manipulative",
+  "semanticType": "Promotional Pressure"
+}
+```
+
+## Asynchronous (Batch-Friendly) Request
+
+Use when:
+- You have **hundreds or thousands of texts** to process
+- Latency is not critical
+- You want to avoid webhook setup and prefer polling
+
+### Step 1: Submit a Batch Job
+
+Send a batch of texts to be processed in the background.
+
+```bash
+curl -X POST "$BASE_URL/text-moderate/async" \
+  -H "Authorization: Bearer $RISKOR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "texts": [
+      "This opportunity guarantees a 200% return.",
+      "Please send me your credit card details to process the refund."
+    ],
+    "language": "en"
+  }'
+```
+
+**Response:**
+
+```json
+{
+  "task_id": "t_async_54af1d",
+  "status": "pending"
+}
+```
+
+### Step 2: Poll for Job Status
+
+Query the job status until it is complete.
+
+```bash
+curl -X GET "$BASE_URL/text-moderate/async/status?t=t_async_54af1d" \
+  -H "Authorization: Bearer $RISKOR_API_KEY"
+```
+
+**Example status:**
+
+```json
+{
+  "task_id": "t_async_54af1d",
+  "status": "processing"
+}
+```
+
+### Step 3: Retrieve Results
+
+Fetch the results when the job is done.
+
+```bash
+curl -X GET "$BASE_URL/text-moderate/async/result?t=t_async_54af1d" \
+  -H "Authorization: Bearer $RISKOR_API_KEY"
+```
+
+**Example batch results:**
+
+```json
+[
+  {
+    "text": "This opportunity guarantees a 200% return.",
+    "final_score": 3
+  },
+  {
+    "text": "Please send me your credit card details to process the refund.",
+    "final_score": 3
+  }
+]
+```
+
+## Request Parameters
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| text | string | yes* | For single text moderation (synchronous) |
+| texts | array | yes* | For batch moderation (asynchronous) |
+| language | string | no | Language code (en, zh-TW). If omitted, will be inferred |
+| threshold | integer | no | Minimum score (0-3) required to flag content |
+
+<Note>
+Either `text` or `texts` is required, not both.
+</Note>
+
+## Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| task_id | string | Unique identifier for the moderation request |
+| violation_prob | float | Probability score (0-1) indicating likelihood of violation |
+| final_score | integer | Risk score: 0=safe, 1=warn, 2=review, 3=block |
+| subcategory | string | Specific violation type detected |
+| tone | string | Detected communication tone |
+| semanticType | string | Semantic classification of the content |
+
+## Next Steps
+
+- **API Reference**: Explore all available endpoints and parameters
+- **Webhooks**: Set up real-time notifications for async jobs  
+- **SDKs**: Use our official client libraries
+- **Rate Limits**: Understand usage limits and best practices

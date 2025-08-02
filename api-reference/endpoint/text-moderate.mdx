@@ -1,0 +1,286 @@
+---
+title: Text moderation
+description: Analyze text for scam, fraud, and manipulative language
+---
+
+Given a text input, outputs if the text contains scam, fraud, or manipulative language along with detailed classification.
+
+## Create moderation
+
+<CodeGroup>
+
+```bash curl
+curl https://api.riskor.com/text-moderate \
+  -H "Authorization: Bearer $RISKOR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Invest $500 today, guaranteed to double in a week!"
+  }'
+```
+
+```python python
+from riskor import Riskor
+
+client = Riskor(
+  api_key="YOUR_API_KEY"
+)
+
+response = client.moderations.create(
+  text="Invest $500 today, guaranteed to double in a week!"
+)
+
+print(response)
+```
+
+```javascript node.js
+import Riskor from "riskor";
+
+const riskor = new Riskor({
+  apiKey: process.env.RISKOR_API_KEY,
+});
+
+const moderation = await riskor.moderations.create({
+  text: "Invest $500 today, guaranteed to double in a week!",
+});
+
+console.log(moderation);
+```
+
+</CodeGroup>
+
+```json Response
+{
+  "id": "modr-XXXXX",
+  "model": "text-moderation-007",
+  "results": [
+    {
+      "violation_prob": 0.91,
+      "final_score": 3,
+      "sub_category": "Guaranteed Return Claims",
+      "tone": "Assertive",
+      "semantic_type": "Manipulative Persuasion",
+      "categories": {
+        "scam": true,
+        "fraud": true,
+        "manipulation": true,
+        "investment_fraud": true,
+        "guaranteed_returns": true
+      },
+      "category_scores": {
+        "scam": 0.91,
+        "fraud": 0.87,
+        "manipulation": 0.89,
+        "investment_fraud": 0.93,
+        "guaranteed_returns": 0.95
+      }
+    }
+  ]
+}
+```
+
+## Request body
+
+<ParamField body="text" type="string" required>
+  The input text to classify. Maximum 10,000 characters.
+</ParamField>
+
+<ParamField body="model" type="string">
+  The content moderation model to use. Currently only `text-moderation-007` is available.
+  
+  Defaults to `text-moderation-007`.
+</ParamField>
+
+<ParamField body="lang" type="string">
+  Language hint as ISO code (e.g., `en`, `zh`, `es`). If omitted, the model attempts to infer the language.
+</ParamField>
+
+## Response format
+
+Returns a moderation object with analysis results.
+
+### The moderation object
+
+<ResponseField name="id" type="string">
+  A unique identifier for the moderation request.
+</ResponseField>
+
+<ResponseField name="model" type="string">
+  The model used to generate the moderation result.
+</ResponseField>
+
+<ResponseField name="results" type="array">
+  A list of moderation objects.
+</ResponseField>
+
+### The moderation result object
+
+<ResponseField name="violation_prob" type="number">
+  A score between 0 and 1 indicating the likelihood of a policy violation. Higher scores indicate higher likelihood of violation.
+</ResponseField>
+
+<ResponseField name="final_score" type="integer">
+  An integer score from 0 to 3 indicating the severity:
+  - `0`: Safe content
+  - `1`: Warning level
+  - `2`: Requires review
+  - `3`: Should be blocked
+</ResponseField>
+
+<ResponseField name="sub_category" type="string">
+  Fine-grained classification of the violation type (e.g., "Guaranteed Return Claims").
+</ResponseField>
+
+<ResponseField name="tone" type="string">
+  The detected tone of the text (e.g., "Assertive", "Urgent", "Persuasive").
+</ResponseField>
+
+<ResponseField name="semantic_type" type="string">
+  The semantic classification of the content (e.g., "Manipulative Persuasion", "Call To Action").
+</ResponseField>
+
+<ResponseField name="categories" type="object">
+  Boolean flags for each category indicating whether the content violates that category.
+  
+  <Expandable title="Show possible categories">
+    <ResponseField name="scam" type="boolean">
+      Content that appears to be a scam.
+    </ResponseField>
+    <ResponseField name="fraud" type="boolean">
+      Content that appears to be fraudulent.
+    </ResponseField>
+    <ResponseField name="manipulation" type="boolean">
+      Content that uses manipulative language or tactics.
+    </ResponseField>
+    <ResponseField name="investment_fraud" type="boolean">
+      Content related to investment fraud or scams.
+    </ResponseField>
+    <ResponseField name="guaranteed_returns" type="boolean">
+      Content that makes unrealistic guarantee claims about returns.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="category_scores" type="object">
+  Confidence scores for each category, ranging from 0 to 1.
+</ResponseField>
+
+## Example usage
+
+### Basic text moderation
+
+<CodeGroup>
+
+```python python
+response = client.moderations.create(
+    text="Click here to claim your free $1000 prize!"
+)
+
+if response.results[0].final_score >= 2:
+    print("Content requires review or blocking")
+else:
+    print("Content is safe")
+```
+
+```javascript node.js
+const response = await riskor.moderations.create({
+  text: "Click here to claim your free $1000 prize!"
+});
+
+if (response.results[0].final_score >= 2) {
+  console.log("Content requires review or blocking");
+} else {
+  console.log("Content is safe");
+}
+```
+
+</CodeGroup>
+
+### Batch processing
+
+```python python
+texts = [
+    "Invest now for guaranteed 500% returns!",
+    "Our company offers legitimate investment opportunities.",
+    "Send me your bank details to claim your inheritance."
+]
+
+for text in texts:
+    response = client.moderations.create(text=text)
+    result = response.results[0]
+    
+    print(f"Text: {text}")
+    print(f"Score: {result.final_score}")
+    print(f"Category: {result.sub_category}")
+    print("---")
+```
+
+## Error handling
+
+The API uses standard HTTP response codes to indicate success or failure.
+
+<ResponseExample>
+```json 400 - Bad Request
+{
+  "error": {
+    "message": "Text is required and cannot be empty",
+    "type": "invalid_request_error",
+    "param": "text",
+    "code": "missing_required_parameter"
+  }
+}
+```
+</ResponseExample>
+
+<ResponseExample>
+```json 401 - Unauthorized
+{
+  "error": {
+    "message": "Invalid API key provided",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key"
+  }
+}
+```
+</ResponseExample>
+
+<ResponseExample>
+```json 429 - Rate Limited
+{
+  "error": {
+    "message": "Rate limit exceeded. Please try again later.",
+    "type": "requests_rate_limit_exceeded",
+    "code": "rate_limit_exceeded"
+  }
+}
+```
+</ResponseExample>
+
+## Best practices
+
+<Note>
+**Input sanitization**: Remove HTML tags, tracking pixels, and personally identifiable information before sending text for analysis.
+</Note>
+
+<Tip>
+**Chunking**: For very long content, split it into logical chunks (paragraphs, sentences) to improve analysis quality and avoid size limits.
+</Tip>
+
+<Warning>
+**Rate limiting**: Implement exponential backoff for rate limit handling. Start with 250ms delay and double on each retry.
+</Warning>
+
+### Integration patterns
+
+1. **Real-time moderation**: Analyze user-generated content before publication
+2. **Batch processing**: Scan existing content repositories for policy violations  
+3. **Audit trails**: Store `sub_category`, `tone`, and `semantic_type` for compliance reporting
+4. **Human review workflows**: Use `final_score` to route content to human moderators
+
+### Score mapping recommendations
+
+| Score | Action | Description |
+|-------|--------|-------------|
+| 0 | Allow | Content is safe to publish |
+| 1 | Flag | Show warning to user, allow with caution |
+| 2 | Review | Hold for human review before publication |
+| 3 | Block | Reject content, possible account action |
